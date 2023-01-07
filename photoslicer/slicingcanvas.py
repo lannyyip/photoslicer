@@ -129,13 +129,21 @@ class SlicingCanvas(tk.Canvas):
 
     def set_image(self, image, new_image=False):
         if self.image is None or new_image:
+            self.zoom = self._get_zoom_automatic(image)
             self.xview_moveto(0)
             self.yview_moveto(0)
-            self.zoom = 1.0
+            #self.zoom = 1.0
             self.delete("frame")
-            self.picture_frame = self.create_rectangle(0, 0, image.width, image.height, outline="", tags=("frame",))
+            #self.picture_frame = self.create_rectangle(0, 0, image.width, image.height, outline="", tags=("frame",))
+            self.picture_frame = self.create_rectangle(0, 0, image.width*self.zoom, image.height*self.zoom, outline="", tags=("frame",))
             self.slices = []
         self.image = image
+
+    def _get_zoom_automatic(self, image):
+        canvas_width = self.winfo_width()
+        canvas_height = self.winfo_height()
+        return min( canvas_width/ image.width , canvas_height/ image.height )
+
 
     def add_bbox(self, bbx):
         self.slices.append(bbx)

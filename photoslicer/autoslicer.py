@@ -3,6 +3,14 @@ import tkinter as tk
 from tools import *
 
 
+class Value:
+    def __init__(self, v):
+        self._v = v
+    def set(self, v):
+        self._v = v
+    def get(self):
+        return self._v
+    
 class Parameter:
     def __init__(self, default, min, max, step, label):
         self.default = default
@@ -11,7 +19,10 @@ class Parameter:
         self.step = step
         self.label = label
         self.control = None
-        self.tk_var = tk.IntVar(value=default)
+        try:
+            self.tk_var = tk.IntVar(value=default)
+        except:
+            self.tk_var = Value(v=default)
 
     def get(self):
         return self.tk_var.get()
@@ -50,6 +61,7 @@ class Autoslicer:
         return self.image is not None
 
     def load_image(self, image_path):
+        print(image_path)
         self.image = cv2.imread(image_path)
         self.image_gray = cv2.cvtColor(self.image, cv2.COLOR_BGR2GRAY)
 
